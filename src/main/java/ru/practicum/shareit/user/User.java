@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.constraints.Email;
-import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor

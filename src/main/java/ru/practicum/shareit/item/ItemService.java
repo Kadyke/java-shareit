@@ -12,9 +12,9 @@ import java.util.List;
 public class ItemService {
     @Autowired
     private final ItemRepository itemRepository;
-
     @Autowired
     private final UserRepository userRepository;
+
     public ItemService(ItemRepository itemRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;

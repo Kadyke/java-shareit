@@ -28,5 +28,4 @@ public class ItemDto {
         this.description = item.getDescription();
         this.available = item.getAvailable();
     }
-
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Component
 public class UserRepository {
-    private final static HashMap<Integer, User> users = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
     private Integer id = 0;
 
     public User createUser(User user) {

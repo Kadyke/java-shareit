@@ -12,7 +12,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @Data
 public class User {
-
     private Integer id;
     private String name;
     @Email

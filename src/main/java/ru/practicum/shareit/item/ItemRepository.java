@@ -6,7 +6,7 @@ import java.util.*;
 
 @Component
 public class ItemRepository {
-    private final static HashMap<Integer, HashMap<Integer, Item>> items = new HashMap<>();
+    private final HashMap<Integer, HashMap<Integer, Item>> items = new HashMap<>();
     private Integer id = 0;
 
     public Item addNewItem(Integer userId, Item item) {

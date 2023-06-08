@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.ForbiddenAccessException;
 import ru.practicum.shareit.exception.NotFoundException;
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class ItemRepository {
             oldItem.update(item);
             return oldItem;
         } else {
-            throw new NotFoundException();
+            throw new ForbiddenAccessException("Редактировать может только владелец.");
         }
     }
 

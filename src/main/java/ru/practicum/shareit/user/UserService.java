@@ -1,15 +1,14 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class UserService {
-    @Autowired
     private final UserRepository repository;
 
     public UserService(UserRepository repository) {
@@ -39,10 +38,6 @@ public class UserService {
     }
 
     public List<UserDto> getAllUsers() {
-        List<UserDto> users = new ArrayList<>();
-        for (User user : repository.getAllUsers()) {
-            users.add(UserMapper.toUserDto(user));
-        }
-        return users;
+        return repository.getAllUsers().stream().map(UserMapper::toUserDto).collect(toList());
     }
 }

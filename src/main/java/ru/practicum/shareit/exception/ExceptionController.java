@@ -16,5 +16,10 @@ public class ExceptionController {
         return Map.of("error", e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Map<String, String> handleForbiddenAccessException(final ForbiddenAccessException e) {
+        return Map.of("error", e.getMessage());
+    }
 }
 

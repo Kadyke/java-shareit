@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.UserRepository;
@@ -8,11 +7,11 @@ import ru.practicum.shareit.user.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class ItemService {
-    @Autowired
     private final ItemRepository itemRepository;
-    @Autowired
     private final UserRepository userRepository;
 
     public ItemService(ItemRepository itemRepository, UserRepository userRepository) {
@@ -50,10 +49,6 @@ public class ItemService {
     }
 
     public List<ItemDto> search(String word) {
-        List<ItemDto> items = new ArrayList<>();
-        for (Item item : itemRepository.search(word)) {
-            items.add(ItemMapper.toItemDto(item));
-        }
-        return items;
+        return itemRepository.search(word).stream().map(ItemMapper::toItemDto).collect(toList());
     }
 }

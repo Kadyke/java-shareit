@@ -1,34 +1,26 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.User;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class User {
+public class UserDto {
     private Integer id;
     private String name;
     @Email
+    @NotNull
     private String email;
 
-    public User(UserDto user) {
+    public UserDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
     }
-
-    public void update(User user) {
-        if (user.name != null) {
-            this.name = user.name;
-        }
-        if (user.email != null) {
-            this.email = user.email;
-        }
-    }
 }
-

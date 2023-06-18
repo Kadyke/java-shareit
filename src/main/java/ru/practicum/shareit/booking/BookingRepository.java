@@ -13,7 +13,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findByBookerIdAndStatus(Integer id, String status);
 
     @Query(value = "SELECT * FROM bookings WHERE user_id = ? and start_time < CURRENT_TIMESTAMP AND end_time >" +
-            " CURRENT_TIMESTAMP ORDER BY start_time;", nativeQuery = true)
+            " CURRENT_TIMESTAMP ORDER BY start_time DESC;", nativeQuery = true)
     List<Booking> findByBookerIdAndCurrentTime(Integer id);
 
     @Query(value = "SELECT * FROM bookings WHERE user_id = ? and start_time > CURRENT_TIMESTAMP " +

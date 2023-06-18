@@ -99,6 +99,7 @@ public class ItemService {
         comment.setCreatedTime(LocalDateTime.now());
         return toCommentDto(commentRepository.save(comment));
     }
+
     private List<ItemOut> collectionToItemOut(Collection<Item> items) {
         return items.stream().map(this::toItemOut).collect(toList());
     }

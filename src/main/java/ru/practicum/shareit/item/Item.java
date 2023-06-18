@@ -3,34 +3,28 @@ package ru.practicum.shareit.item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.user.User;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "items")
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotNull
-    @NotBlank
     private String name;
-    @NotNull
-    @NotBlank
     private String description;
-    @NotNull
     private Boolean available;
-    private Integer ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User owner;
+    @Transient
     private ItemRequest request;
-
-    public Item(ItemDto item) {
-        this.id = item.getId();
-        this.name = item.getName();
-        this.description = item.getDescription();
-        this.available = item.getAvailable();
-    }
 
     public void update(Item item) {
         if (item.name != null) {
@@ -42,8 +36,8 @@ public class Item {
         if (item.available != null) {
             this.available = item.available;
         }
-        if (item.ownerId != null) {
-            this.ownerId = item.ownerId;
+        if (item.owner != null) {
+            this.owner = item.owner;
         }
         if (item.request != null) {
             this.request = item.request;

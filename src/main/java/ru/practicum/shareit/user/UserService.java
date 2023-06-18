@@ -1,11 +1,8 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class UserService {
@@ -15,29 +12,26 @@ public class UserService {
         this.repository = repository;
     }
 
-    public UserDto createUser(UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        userDto = UserMapper.toUserDto(repository.createUser(user));
-        return userDto;
+    public User createUser(User user) {
+        return repository.save(user);
     }
 
-
-    public UserDto updateUser(UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        userDto = UserMapper.toUserDto(repository.updateUser(user));
-        return userDto;
+    public User updateUser(User user) {
+        User oldUser = repository.getReferenceById(user.getId());
+        oldUser.update(user);
+        repository.save(oldUser);
+        return oldUser;
     }
 
     public void deleteUser(Integer id) {
-        repository.deleteUser(id);
+        repository.deleteById(id);
     }
 
-    public UserDto getUser(Integer id) {
-        UserDto userDto = UserMapper.toUserDto(repository.getUser(id));
-        return userDto;
+    public User getUser(Integer id) {
+        return repository.getReferenceById(id);
     }
 
-    public List<UserDto> getAllUsers() {
-        return repository.getAllUsers().stream().map(UserMapper::toUserDto).collect(toList());
+    public List<User> getAllUsers() {
+        return repository.findAll();
     }
 }

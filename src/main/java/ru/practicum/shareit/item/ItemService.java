@@ -93,11 +93,11 @@ public class ItemService {
         if (bookings.isEmpty()) {
             throw new CommentWithoutBookingException();
         }
-        Comment comment = toComment(commentDto);
+        Comment comment = CommentMapper.toComment(commentDto);
         comment.setAuthor(user.get());
         comment.setItem(item.get());
         comment.setCreatedTime(LocalDateTime.now());
-        return toCommentDto(commentRepository.save(comment));
+        return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
 
     private List<ItemOut> collectionToItemOut(Collection<Item> items) {
@@ -122,34 +122,7 @@ public class ItemService {
         } else {
             itemOut.setLastBooking(BookingMapper.toBookingDto(lastBooking));
         }
-        itemOut.setComments(collectionToCommentDto(commentRepository.findByItemId(item.getId())));
+        itemOut.setComments(CommentMapper.collectionToCommentDto(commentRepository.findByItemId(item.getId())));
         return itemOut;
-    }
-
-    private Comment toComment(CommentDto commentDto) {
-        Comment comment = new Comment();
-        comment.setId(commentDto.getId());
-        comment.setText(commentDto.getText());
-        if (commentDto.getItem() == null) {
-            comment.setItem(null);
-        } else {
-            comment.setItem(ItemMapper.toItem(commentDto.getItem()));
-        }
-        comment.setCreatedTime(commentDto.getCreated());
-        return comment;
-    }
-
-    private CommentDto toCommentDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setId(comment.getId());
-        commentDto.setText(comment.getText());
-        commentDto.setItem(ItemMapper.toItemDto(comment.getItem()));
-        commentDto.setAuthorName(comment.getAuthor().getName());
-        commentDto.setCreated(comment.getCreatedTime());
-        return commentDto;
-    }
-
-    private List<CommentDto> collectionToCommentDto(Collection<Comment> comments) {
-        return comments.stream().map(this::toCommentDto).collect(toList());
     }
 }

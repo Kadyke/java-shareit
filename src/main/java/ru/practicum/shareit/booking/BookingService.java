@@ -5,18 +5,13 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOut;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class BookingService {
@@ -49,9 +44,9 @@ public class BookingService {
             throw new TimeException("Окончание не может быть одновременно с началом.");
         }
         bookingDto.setBookerId(userId);
-        Booking booking = toBooking(bookingDto);
+        Booking booking = BookingMapper.toBooking(bookingDto,item.get(), user.get());
         booking.setStatus(BookingStatus.WAITING);;
-        return toBookingOut(bookingRepository.save(booking));
+        return BookingMapper.toBookingOut(bookingRepository.save(booking));
     }
 
     public BookingOut changeStatus(Integer id, Integer userId, Boolean status) {
@@ -72,7 +67,7 @@ public class BookingService {
         } else {
             booking.setStatus(BookingStatus.REJECTED);
         }
-        return toBookingOut(bookingRepository.save(booking));
+        return BookingMapper.toBookingOut(bookingRepository.save(booking));
     }
 
     public BookingOut getBooking(Integer id, Integer userId) {
@@ -85,7 +80,7 @@ public class BookingService {
         if (!(booking.getBooker().getId().equals(userId) || booking.getItem().getOwner().getId().equals(userId))) {
             throw new ForbiddenAccessException("Просмотр доступен только участникам бронирования.");
         }
-        return toBookingOut(booking);
+        return BookingMapper.toBookingOut(booking);
     }
 
     public List<BookingOut> getUserBookings(Integer userId, String stateInString) {
@@ -101,16 +96,16 @@ public class BookingService {
         }
         switch (state) {
             case ALL:
-                return collectionToBookingOut(bookingRepository.findByBookerId(userId));
+                return BookingMapper.collectionToBookingOut(bookingRepository.findByBookerId(userId));
             case PAST:
-                return collectionToBookingOut(bookingRepository.findByBookerIdAndPastTime(userId));
+                return BookingMapper.collectionToBookingOut(bookingRepository.findByBookerIdAndPastTime(userId));
             case FUTURE:
-                return collectionToBookingOut(bookingRepository.findByBookerIdAndFutureTime(userId));
+                return BookingMapper.collectionToBookingOut(bookingRepository.findByBookerIdAndFutureTime(userId));
             case CURRENT:
-                return collectionToBookingOut(bookingRepository.findByBookerIdAndCurrentTime(userId));
+                return BookingMapper.collectionToBookingOut(bookingRepository.findByBookerIdAndCurrentTime(userId));
             case WAITING:
             case REJECTED:
-                return collectionToBookingOut(bookingRepository.findByBookerIdAndStatus(userId, state.toString()));
+                return BookingMapper.collectionToBookingOut(bookingRepository.findByBookerIdAndStatus(userId, state.toString()));
         }
         return null;
     }
@@ -134,50 +129,24 @@ public class BookingService {
         for (Item item : items) {
             switch (state) {
                 case ALL:
-                    bookings.addAll(collectionToBookingOut(bookingRepository.findByItemId(item.getId())));
+                    bookings.addAll(BookingMapper.collectionToBookingOut(bookingRepository.findByItemId(item.getId())));
                     break;
                 case PAST:
-                    bookings.addAll(collectionToBookingOut(bookingRepository.findByItemIdAndPastTime(item.getId())));
+                    bookings.addAll(BookingMapper.collectionToBookingOut(bookingRepository.findByItemIdAndPastTime(item.getId())));
                     break;
                 case FUTURE:
-                    bookings.addAll(collectionToBookingOut(bookingRepository.findByItemIdAndFutureTime(item.getId())));
+                    bookings.addAll(BookingMapper.collectionToBookingOut(bookingRepository.findByItemIdAndFutureTime(item.getId())));
                     break;
                 case CURRENT:
-                    bookings.addAll(collectionToBookingOut(bookingRepository.findByItemIdAndCurrentTime(item.getId())));
+                    bookings.addAll(BookingMapper.collectionToBookingOut(bookingRepository.findByItemIdAndCurrentTime(item.getId())));
                     break;
                 case WAITING:
                 case REJECTED:
-                    bookings.addAll(collectionToBookingOut(bookingRepository.findByItemIdAndStatus(item.getId(),
+                    bookings.addAll(BookingMapper.collectionToBookingOut(bookingRepository.findByItemIdAndStatus(item.getId(),
                             state.toString())));
                     break;
             }
         }
         return bookings;
-    }
-
-    private Booking toBooking(BookingDto bookingDto) {
-        Booking booking = new Booking();
-        booking.setId(bookingDto.getId());
-        booking.setStartTime(bookingDto.getStart());
-        booking.setEndTime(bookingDto.getEnd());
-        booking.setItem(itemRepository.getReferenceById(bookingDto.getItemId()));
-        booking.setBooker(userRepository.getReferenceById(bookingDto.getBookerId()));
-        booking.setStatus(bookingDto.getStatus());
-        return booking;
-    }
-
-    private List<BookingOut> collectionToBookingOut(Collection<Booking> bookings) {
-        return bookings.stream().map(this::toBookingOut).collect(toList());
-    }
-
-    private BookingOut toBookingOut(Booking booking) {
-        BookingOut bookingOut = new BookingOut();
-        bookingOut.setId(booking.getId());
-        bookingOut.setEnd(booking.getEndTime());
-        bookingOut.setStart(booking.getStartTime());
-        bookingOut.setItem(ItemMapper.toItemDto(booking.getItem()));
-        bookingOut.setBooker(UserMapper.toUserDto(booking.getBooker()));
-        bookingOut.setStatus(booking.getStatus());
-        return bookingOut;
     }
 }

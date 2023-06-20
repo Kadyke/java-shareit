@@ -9,35 +9,37 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
-    private final UserService userService;
+    private final UserService service;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService service) {
+        this.service = service;
     }
 
     @PostMapping
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        return userService.createUser(userDto);
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toUserDto(service.createUser(user));
     }
 
     @PatchMapping("/{id}")
     public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Integer id) {
         userDto.setId(id);
-        return userService.updateUser(userDto);
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toUserDto(service.updateUser(user));
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
+        service.deleteUser(id);
     }
 
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable Integer id) {
-        return userService.getUser(id);
+        return UserMapper.toUserDto(service.getUser(id));
     }
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
+        return UserMapper.collectionToUserDto(service.getAllUsers());
     }
 }

@@ -6,18 +6,17 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
+@NoArgsConstructor
+public class CommentDto {
     private Integer id;
     @NotNull
     @NotBlank
-    private String name;
-    @NotNull
-    @NotBlank
-    private String description;
-    @NotNull
-    private Boolean available;
+    private String text;
+    private ItemDto item;
+    private String authorName;
+    private LocalDateTime created;
 }

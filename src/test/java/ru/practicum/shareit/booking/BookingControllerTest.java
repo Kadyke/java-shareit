@@ -46,6 +46,7 @@ class BookingControllerTest {
     private Item kukla;
     private BookingDto bookingDto;
     private BookingOut bookingOut;
+
     @BeforeEach
     void getArguments() {
         masha = new User(1, "masha", "email@mail.ru");
@@ -59,6 +60,7 @@ class BookingControllerTest {
         bookingOut = new BookingOut(1, now.plusHours(1), now.plusHours(2), ItemMapper.toItemDto(kukla),
                 UserMapper.toUserDto(vova), BookingStatus.WAITING);
     }
+
     @Test
     @SneakyThrows
     void addNewBooking() {

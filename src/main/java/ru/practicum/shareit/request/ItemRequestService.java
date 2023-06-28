@@ -58,8 +58,8 @@ public class ItemRequestService {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
         Integer page = from / size;
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<ItemRequestDto> requests = ItemRequestMapper.collectionToItemRequestDto(repository.findByRequesterNot
-                (user, pageable).toList());
+        List<ItemRequestDto> requests = ItemRequestMapper.collectionToItemRequestDto(
+                repository.findByRequesterNot(user, pageable).toList());
         for (ItemRequestDto request : requests) {
             request.setItems(ItemMapper.collectionToItemDto(itemService.findByRequestId(request.getId())));
         }

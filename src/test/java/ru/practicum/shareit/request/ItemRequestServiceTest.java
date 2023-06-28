@@ -38,6 +38,7 @@ class ItemRequestServiceTest {
     private final User valy = new User(3, "valy", "demo@mail.ru");
     private ItemRequest requestByValy = new ItemRequest(1, "hochu igrushku dly devochki", valy, now);
     private ItemRequest requestByVova = new ItemRequest(2, "hochu pistolet", vova, now.plusHours(1));
+    
     @Test
     void addNewRequest() {
         ItemRequestDto itemRequestDto = new ItemRequestDto();

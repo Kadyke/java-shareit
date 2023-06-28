@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +31,7 @@ class UserServiceIntegrationTest {
 
     @Test
     @DirtiesContext
+    @Transactional
     void updateUser() {
         User user = new User(masha.getId(), "vasy", null);
         User updatedUser = service.updateUser(user);
@@ -52,6 +54,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     void getAllUsers() {
         List<User> users = service.getAllUsers();
         assertEquals(3, users.size());

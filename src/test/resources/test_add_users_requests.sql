@@ -1,5 +1,3 @@
-DELETE FROM items;
-
 DELETE FROM requests;
 
 DELETE FROM users;

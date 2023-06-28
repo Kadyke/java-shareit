@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("/test_add_users_items_bookings.sql")
-@Transactional
 class BookingServiceIntegrationTest {
     @Autowired
     private BookingService bookingService;
@@ -102,6 +101,7 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     void getOwnerBookingsByPage() {
         List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.ALL, 0, 3);
         System.out.println(bookings);

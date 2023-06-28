@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -57,6 +58,7 @@ class BookingControllerTest {
         bookingDto.setItemId(kukla.getId());
         bookingDto.setStart(now.plusHours(1));
         bookingDto.setEnd(now.plusHours(2));
+        bookingDto.setBookerId(vova.getId());
         bookingOut = new BookingOut(1, now.plusHours(1), now.plusHours(2), ItemMapper.toItemDto(kukla),
                 UserMapper.toUserDto(vova), BookingStatus.WAITING);
     }
@@ -64,7 +66,7 @@ class BookingControllerTest {
     @Test
     @SneakyThrows
     void addNewBooking() {
-        when(service.addNewBooking(bookingDto, vova.getId())).thenAnswer(invocationOnMock -> {
+        when(service.addNewBooking(Mockito.any(BookingDto.class))).thenAnswer(invocationOnMock -> {
             Booking booking = BookingMapper.toBooking(invocationOnMock.getArgument(0), kukla, vova);
             booking.setId(1);
             booking.setStatus(BookingStatus.WAITING);

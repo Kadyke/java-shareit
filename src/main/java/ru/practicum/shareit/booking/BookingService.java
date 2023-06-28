@@ -30,8 +30,8 @@ public class BookingService {
         this.itemRepository = itemRepository;
     }
 
-    public BookingOut addNewBooking(BookingDto bookingDto, Integer userId) {
-        User user = userService.getUser(userId);
+    public BookingOut addNewBooking(BookingDto bookingDto) {
+        User user = userService.getUser(bookingDto.getBookerId());
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(NotFoundException::new);
         if (!item.getAvailable()) {
             throw new UnavailableItemException();
@@ -45,8 +45,7 @@ public class BookingService {
         if (bookingDto.getEnd().equals(bookingDto.getStart())) {
             throw new TimeException("Окончание не может быть одновременно с началом.");
         }
-        bookingDto.setBookerId(userId);
-        Booking booking = BookingMapper.toBooking(bookingDto,item, user);
+        Booking booking = BookingMapper.toBooking(bookingDto, item, user);
         booking.setStatus(BookingStatus.WAITING);
         return BookingMapper.toBookingOut(bookingRepository.save(booking));
     }

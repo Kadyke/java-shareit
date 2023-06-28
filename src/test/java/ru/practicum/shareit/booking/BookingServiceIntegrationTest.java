@@ -46,7 +46,8 @@ class BookingServiceIntegrationTest {
         bookingDto.setItemId(nosok.getId());
         bookingDto.setStart(now);
         bookingDto.setEnd(now.plusHours(1));
-        BookingOut bookingOut = bookingService.addNewBooking(bookingDto, valy.getId());
+        bookingDto.setBookerId(valy.getId());
+        BookingOut bookingOut = bookingService.addNewBooking(bookingDto);
         assertEquals(bookingDto.getStart(), bookingOut.getStart());
         assertEquals(bookingDto.getEnd(), bookingOut.getEnd());
         assertEquals(bookingDto.getItemId(), bookingOut.getItem().getId());

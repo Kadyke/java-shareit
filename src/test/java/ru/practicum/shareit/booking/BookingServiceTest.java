@@ -54,15 +54,16 @@ class BookingServiceTest {
         bookingDto.setItemId(1);
         bookingDto.setStart(now);
         bookingDto.setEnd(now.plusHours(1));
+        bookingDto.setBookerId(vova.getId());
         booking = new Booking(1, now.plusHours(1), now.plusHours(2), kukla, vova, BookingStatus.WAITING);
     }
 
     @Test
     void addNewBooking_whenBookingIsValid_thenReturnBookingOut() {
-        when(userService.getUser(2)).thenReturn(vova);
+        when(userService.getUser(vova.getId())).thenReturn(vova);
         when(itemRepository.findById(bookingDto.getItemId())).thenReturn(Optional.of(kukla));
         when(bookingRepository.save(Mockito.any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        BookingOut bookingOut = service.addNewBooking(bookingDto, 2);
+        BookingOut bookingOut = service.addNewBooking(bookingDto);
         assertEquals(bookingDto.getStart(), bookingOut.getStart());
         assertEquals(bookingDto.getEnd(), bookingOut.getEnd());
         assertEquals(ItemMapper.toItemDto(kukla), bookingOut.getItem());
@@ -76,27 +77,28 @@ class BookingServiceTest {
         bookingDto.setEnd(now);
         when(userService.getUser(2)).thenReturn(vova);
         when(itemRepository.findById(bookingDto.getItemId())).thenReturn(Optional.of(kukla));
-        assertThrows(TimeException.class, () -> service.addNewBooking(bookingDto, 2));
+        assertThrows(TimeException.class, () -> service.addNewBooking(bookingDto));
         bookingDto.setStart(now);
         bookingDto.setEnd(now.minusHours(1));
-        assertThrows(TimeException.class, () -> service.addNewBooking(bookingDto, 2));
+        assertThrows(TimeException.class, () -> service.addNewBooking(bookingDto));
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 
     @Test
     void addNewBooking_whenBookingIsNotAvailable_thenReturnUnavailableItemException() {
         kukla.setAvailable(false);
-        when(userService.getUser(2)).thenReturn(vova);
+        when(userService.getUser(vova.getId())).thenReturn(vova);
         when(itemRepository.findById(bookingDto.getItemId())).thenReturn(Optional.of(kukla));;
-        assertThrows(UnavailableItemException.class, () -> service.addNewBooking(bookingDto, 2));
+        assertThrows(UnavailableItemException.class, () -> service.addNewBooking(bookingDto));
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 
     @Test
     void addNewBooking_whenBookingIsForSelf_thenReturnBookingForSelfException() {
-        when(userService.getUser(1)).thenReturn(masha);
+        bookingDto.setBookerId(masha.getId());
+        when(userService.getUser(masha.getId())).thenReturn(masha);
         when(itemRepository.findById(bookingDto.getItemId())).thenReturn(Optional.of(kukla));;
-        assertThrows(BookingForSelfException.class, () -> service.addNewBooking(bookingDto, 1));
+        assertThrows(BookingForSelfException.class, () -> service.addNewBooking(bookingDto));
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 

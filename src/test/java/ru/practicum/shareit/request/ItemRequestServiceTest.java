@@ -38,7 +38,6 @@ class ItemRequestServiceTest {
     private ItemRequest requestByValy = new ItemRequest(1, "hochu igrushku dly devochki", valy, now);
     private ItemRequest requestByVova = new ItemRequest(2, "hochu pistolet", vova, now.plusHours(1));
     private final Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
-    
     @Test
     void getUserRequests() {
         when(userService.getUser(vova.getId())).thenReturn(vova);

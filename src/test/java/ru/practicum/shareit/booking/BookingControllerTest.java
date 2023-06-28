@@ -28,8 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
@@ -137,7 +136,7 @@ class BookingControllerTest {
 
     @Test
     @SneakyThrows
-    void geOwnerBookings() {
+    void getOwnerBookings() {
         when(service.getOwnerBookings(masha.getId(), State.ALL, 0, 2))
                 .thenAnswer(invocationOnMock -> List.of(bookingOut));
         mvc.perform(get("/bookings/owner")
@@ -150,5 +149,32 @@ class BookingControllerTest {
                 .andExpect(jsonPath("$[0].start", is(bookingOut.getStart().format(formatter))))
                 .andExpect(jsonPath("$[0].end", is(bookingOut.getEnd().format(formatter))))
                 .andExpect(jsonPath("$[0].status", is(bookingOut.getStatus().name())));
+    }
+
+    @Test
+    @SneakyThrows
+    void getOwnerBookings_returnWrongParamsException() {
+        when(service.getOwnerBookings(masha.getId(), State.ALL, 0, 2))
+                .thenAnswer(invocationOnMock -> List.of(bookingOut));
+        mvc.perform(get("/bookings/owner")
+                        .header("X-Sharer-User-Id", masha.getId())
+                        .param("state", "ALL")
+                        .param("from", "-1")
+                        .param("size", "2"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @SneakyThrows
+    void getOwnerBookings_returnStatesException() {
+        when(service.getOwnerBookings(masha.getId(), State.ALL, 0, 2))
+                .thenAnswer(invocationOnMock -> List.of(bookingOut));
+        mvc.perform(get("/bookings/owner")
+                        .header("X-Sharer-User-Id", masha.getId())
+                        .param("state", "ALLSU")
+                        .param("from", "1")
+                        .param("size", "2"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"error\":\"Unknown state: ALLSU\"}"));
     }
 }

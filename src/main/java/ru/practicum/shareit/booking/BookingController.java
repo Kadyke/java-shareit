@@ -57,7 +57,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public List<BookingOut> geOwnerBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
+    public List<BookingOut> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
                                             @RequestParam(name = "state", defaultValue = "ALL") String stateInString,
                                             @RequestParam(name = "from", required = false) Integer from,
                                             @RequestParam(name = "size", required = false) Integer size) {

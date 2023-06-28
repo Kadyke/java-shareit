@@ -57,9 +57,16 @@ class BookingServiceIntegrationTest {
 
     @Test
     @Transactional
-    void changeStatus() {
+    void changeStatusWithTrue() {
         BookingOut bookingAfter = bookingService.changeStatus(nosokByVova.getId(), masha.getId(), true);
         assertEquals(BookingStatus.APPROVED, bookingAfter.getStatus());
+    }
+
+    @Test
+    @Transactional
+    void changeStatusWithFalse() {
+        BookingOut bookingAfter = bookingService.changeStatus(nosokByVova.getId(), masha.getId(), false);
+        assertEquals(BookingStatus.REJECTED, bookingAfter.getStatus());
     }
 
     @Test
@@ -74,7 +81,7 @@ class BookingServiceIntegrationTest {
 
     @Test
     @Transactional
-    void getUserBookings() {
+    void getUserBookingsALL() {
         List<BookingOut> bookings = bookingService.getUserBookings(vova.getId(), State.ALL);
         assertEquals(2, bookings.size());
         assertEquals(nosokByVova.getId(), bookings.get(0).getId());
@@ -83,7 +90,48 @@ class BookingServiceIntegrationTest {
 
     @Test
     @Transactional
-    void getUserBookingsByPage() {
+    void getUserBookingsPast() {
+        List<BookingOut> bookings = bookingService.getUserBookings(valy.getId(), State.PAST);
+        assertEquals(1, bookings.size());
+        assertEquals(nosokByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsFuture() {
+        List<BookingOut> bookings = bookingService.getUserBookings(vova.getId(), State.FUTURE);
+        assertEquals(2, bookings.size());
+        assertEquals(nosokByVova.getId(), bookings.get(0).getId());
+        assertEquals(kuklaByVova.getId(), bookings.get(1).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsCurrent() {
+        List<BookingOut> bookings = bookingService.getUserBookings(valy.getId(), State.CURRENT);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsWaiting() {
+        List<BookingOut> bookings = bookingService.getUserBookings(valy.getId(), State.WAITING);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsRejected() {
+        List<BookingOut> bookings = bookingService.getUserBookings(vova.getId(), State.REJECTED);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByVova.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsByPageAll() {
         List<BookingOut> bookings = bookingService.getUserBookings(vova.getId(), State.ALL, 1, 1);
         assertEquals(1, bookings.size());
         assertEquals(kuklaByVova.getId(), bookings.get(0).getId());
@@ -91,7 +139,48 @@ class BookingServiceIntegrationTest {
 
     @Test
     @Transactional
-    void getOwnerBookings() {
+    void getUserBookingsPastByPage() {
+        List<BookingOut> bookings = bookingService.getUserBookings(valy.getId(), State.PAST, 0, 2);
+        assertEquals(1, bookings.size());
+        assertEquals(nosokByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsFutureByPage() {
+        List<BookingOut> bookings = bookingService.getUserBookings(vova.getId(), State.FUTURE, 0, 2);
+        assertEquals(2, bookings.size());
+        assertEquals(nosokByVova.getId(), bookings.get(0).getId());
+        assertEquals(kuklaByVova.getId(), bookings.get(1).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsCurrentByPage() {
+        List<BookingOut> bookings = bookingService.getUserBookings(valy.getId(), State.CURRENT, 0, 2);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsWaitingByPage() {
+        List<BookingOut> bookings = bookingService.getUserBookings(valy.getId(), State.WAITING, 0, 2);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getUserBookingsRejectedByPage() {
+        List<BookingOut> bookings = bookingService.getUserBookings(vova.getId(), State.REJECTED, 0, 2);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByVova.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsAll() {
         List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.ALL);
         System.out.println(bookings);
         assertEquals(4, bookings.size());
@@ -103,12 +192,88 @@ class BookingServiceIntegrationTest {
 
     @Test
     @Transactional
-    void getOwnerBookingsByPage() {
+    void getOwnerBookingsFuture() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.FUTURE);
+        System.out.println(bookings);
+        assertEquals(2, bookings.size());
+        assertEquals(nosokByVova.getId(), bookings.get(0).getId());
+        assertEquals(kuklaByVova.getId(), bookings.get(1).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsCurrent() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.CURRENT);
+        System.out.println(bookings);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsWaiting() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.WAITING);
+        System.out.println(bookings);
+        assertEquals(2, bookings.size());
+        assertEquals(nosokByVova.getId(), bookings.get(0).getId());
+        assertEquals(kuklaByValy.getId(), bookings.get(1).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsRejected() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.REJECTED);
+        System.out.println(bookings);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByVova.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsAllByPage() {
         List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.ALL, 0, 3);
         System.out.println(bookings);
         assertEquals(3, bookings.size());
         assertEquals(nosokByVova.getId(), bookings.get(0).getId());
         assertEquals(kuklaByVova.getId(), bookings.get(1).getId());
         assertEquals(kuklaByValy.getId(), bookings.get(2).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsFutureByPage() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.FUTURE, 0, 2);
+        System.out.println(bookings);
+        assertEquals(2, bookings.size());
+        assertEquals(nosokByVova.getId(), bookings.get(0).getId());
+        assertEquals(kuklaByVova.getId(), bookings.get(1).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsCurrentByPage() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.CURRENT, 0, 1);
+        System.out.println(bookings);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByValy.getId(), bookings.get(0).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsWaitingByPage() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.WAITING, 0, 2);
+        System.out.println(bookings);
+        assertEquals(2, bookings.size());
+        assertEquals(nosokByVova.getId(), bookings.get(0).getId());
+        assertEquals(kuklaByValy.getId(), bookings.get(1).getId());
+    }
+
+    @Test
+    @Transactional
+    void getOwnerBookingsRejectedByPage() {
+        List<BookingOut> bookings = bookingService.getOwnerBookings(masha.getId(), State.REJECTED, 0, 1);
+        System.out.println(bookings);
+        assertEquals(1, bookings.size());
+        assertEquals(kuklaByVova.getId(), bookings.get(0).getId());
     }
 }

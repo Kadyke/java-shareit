@@ -7,8 +7,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.exception.CommentWithoutBookingException;
 import ru.practicum.shareit.exception.ForbiddenAccessException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOut;
 import ru.practicum.shareit.request.ItemRequest;
@@ -96,10 +98,10 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void addNewComment() {
-    }
-
-    @Test
-    void findByRequestId() {
+    @Transactional
+    void addNewComment_whenBookingInFuture_thenCommentWithoutBookingException() {
+        CommentDto commentDto = new CommentDto();
+        assertThrows(CommentWithoutBookingException.class, () -> service.addNewComment(commentDto, nosok.getId(),
+                vova.getId()));
     }
 }

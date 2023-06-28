@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("/test_add_users_items_bookings.sql")
+@Transactional
 class BookingServiceIntegrationTest {
     @Autowired
     private BookingService bookingService;

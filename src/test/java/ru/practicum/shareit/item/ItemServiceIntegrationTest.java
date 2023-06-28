@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.exception.ForbiddenAccessException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.TimeException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOut;
 import ru.practicum.shareit.request.ItemRequest;
@@ -17,6 +16,7 @@ import ru.practicum.shareit.user.User;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,16 +83,16 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void getAllUsersItems() {
-        
+    void getAllUsersItemsByPages() {
+        List<ItemOut> items = service.getAllUsersItems(masha.getId(), 1, 1);
+        assertEquals(1, items.size());
     }
 
     @Test
-    void search() {
-    }
-
-    @Test
-    void testSearch() {
+    @Transactional
+    void searchByPages() {
+        List<Item> items = service.search("pist", 0, 3);
+        assertEquals(2, items.size());
     }
 
     @Test

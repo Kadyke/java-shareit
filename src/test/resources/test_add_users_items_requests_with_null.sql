@@ -10,8 +10,8 @@ VALUES (1, 'masha', 'email@mail.ru'),
        (3, 'valy', 'demo@mail.ru');
 
 INSERT INTO requests (id, description, user_id, created_time)
-VALUES (1, 'hochu igrushku dly devochki', 3, DATEADD(HOUR, -1, CURRENT_TIMESTAMP)),
-       (2, 'hochu pistolet', 2, CURRENT_TIMESTAMP));
+VALUES (1, 'hochu igrushku dly devochki', 3, null),
+       (2, 'hochu pistolet', 2, null);
 
 INSERT INTO items (id, name, description, available, user_id, request_id)
 VALUES (1, 'kukla', 'vesch', false, 1, 1),

@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Sql("/test_add_users_items_requests.sql")
+@Sql("/test_add_users_items_requests_with_null.sql")
 class ItemRepositoryTest {
     @Autowired
     ItemRepository repository;

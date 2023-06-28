@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.toList;
 
 @UtilityClass
 public class BookingMapper {
-
     public BookingOut toBookingOut(Booking booking) {
         BookingOut bookingOut = new BookingOut();
         bookingOut.setId(booking.getId());

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 
 import java.util.List;
 
@@ -17,18 +18,19 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        User oldUser = repository.getReferenceById(user.getId());
+        User oldUser = repository.findById(user.getId()).orElseThrow(NotFoundException::new);
         oldUser.update(user);
         repository.save(oldUser);
         return oldUser;
     }
 
     public void deleteUser(Integer id) {
+        repository.findById(id).orElseThrow(NotFoundException::new);
         repository.deleteById(id);
     }
 
     public User getUser(Integer id) {
-        return repository.getReferenceById(id);
+        return repository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public List<User> getAllUsers() {

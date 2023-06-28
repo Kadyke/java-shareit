@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -42,6 +41,7 @@ class ItemRequestServiceIntegrationTest {
         requestByValy = repository.getReferenceById(requestByValy.getId());
         requestByVova = repository.getReferenceById(requestByVova.getId());
     }
+
     @Test
     void getUserRequests() {
         List<ItemRequestDto> requests = service.getUserRequests(valy.getId());
@@ -62,7 +62,7 @@ class ItemRequestServiceIntegrationTest {
 
     @Test
     void getAllRequestsByPages() {
-        List<ItemRequestDto> requests = service.getAllRequests(masha.getId(), 1 ,1);
+        List<ItemRequestDto> requests = service.getAllRequests(masha.getId(), 1, 1);
         assertEquals(1, requests.size());
         assertEquals(requestByValy.getId(), requests.get(0).getId());
         assertEquals(2, requests.get(0).getItems().size());

@@ -40,6 +40,17 @@ class ItemRequestServiceTest {
     private ItemRequest requestByVova = new ItemRequest(2, "hochu pistolet", vova, now.plusHours(1));
     
     @Test
+    void getUserRequests() {
+        when(userService.getUser(vova.getId())).thenReturn(vova);
+        when(repository.findByUserId(vova.getId())).thenReturn(List.of(requestByVova));
+        when(itemService.findByRequestId(Mockito.anyInt())).thenReturn(new ArrayList<>());
+        List<ItemRequestDto> requests = service.getUserRequests(vova.getId());
+        assertEquals(1, requests.size());
+        assertEquals(requestByVova.getId(), requests.get(0).getId());
+        assertTrue(requests.get(0).getItems().isEmpty());
+    }
+
+    @Test
     void addNewRequest() {
         ItemRequestDto itemRequestDto = new ItemRequestDto();
         itemRequestDto.setDescription("ne znayu chego hochu");
@@ -56,17 +67,6 @@ class ItemRequestServiceTest {
         assertEquals(itemRequestDto.getRequesterId(), request.getRequesterId());
         assertNotNull(request.getCreated());
         assertNull(request.getItems());
-    }
-
-    @Test
-    void getUserRequests() {
-        when(userService.getUser(vova.getId())).thenReturn(vova);
-        when(repository.findByUserId(vova.getId())).thenReturn(List.of(requestByVova));
-        when(itemService.findByRequestId(Mockito.anyInt())).thenReturn(new ArrayList<>());
-        List<ItemRequestDto> requests = service.getUserRequests(vova.getId());
-        assertEquals(1, requests.size());
-        assertEquals(requestByVova.getId(), requests.get(0).getId());
-        assertTrue(requests.get(0).getItems().isEmpty());
     }
 
     @Test

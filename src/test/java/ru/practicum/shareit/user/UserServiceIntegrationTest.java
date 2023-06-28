@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("/test_add_users.sql")
+@Transactional
 class UserServiceIntegrationTest {
     @Autowired
     private UserService service;
@@ -31,7 +32,6 @@ class UserServiceIntegrationTest {
 
     @Test
     @DirtiesContext
-    @Transactional
     void updateUser() {
         User user = new User(masha.getId(), "vasy", null);
         User updatedUser = service.updateUser(user);
@@ -54,7 +54,6 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    @Transactional
     void getAllUsers() {
         List<User> users = service.getAllUsers();
         assertEquals(3, users.size());

@@ -33,11 +33,11 @@ class ItemRequestServiceTest {
     @Mock
     private ItemRequestRepository repository;
     private final LocalDateTime now = LocalDateTime.now();
-    private final Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
     private final User vova = new User(2, "vova", "email1@mail.ru");
     private final User valy = new User(3, "valy", "demo@mail.ru");
     private ItemRequest requestByValy = new ItemRequest(1, "hochu igrushku dly devochki", valy, now);
     private ItemRequest requestByVova = new ItemRequest(2, "hochu pistolet", vova, now.plusHours(1));
+    private final Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
     
     @Test
     void getUserRequests() {

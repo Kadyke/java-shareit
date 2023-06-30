@@ -1,15 +1,18 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOut;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
+@Validated
 public class ItemController {
     private final ItemService service;
 
@@ -19,16 +22,14 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addNewItem(@RequestHeader("X-Sharer-User-Id") Integer userId, @Valid @RequestBody ItemDto itemDto) {
-        Item item = ItemMapper.toItem(itemDto);
-        return ItemMapper.toItemDto(service.addNewItem(item, userId));
+        return service.addNewItem(itemDto, userId);
     }
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Integer userId, @RequestBody ItemDto itemDto,
                               @PathVariable Integer id) {
-        Item item = ItemMapper.toItem(itemDto);
-        item.setId(id);
-        return ItemMapper.toItemDto(service.updateItem(item, userId));
+        itemDto.setId(id);
+        return ItemMapper.toItemDto(service.updateItem(itemDto, userId));
     }
 
     @GetMapping("/{id}")
@@ -37,13 +38,23 @@ public class ItemController {
     }
 
     @GetMapping()
-    public List<ItemOut> getAllUsersItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
-        return service.getAllUsersItems(userId);
+    public List<ItemOut> getAllUsersItems(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                                          @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                          @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+        if (from == null || size == null) {
+            return service.getAllUsersItems(userId);
+        }
+        return service.getAllUsersItems(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam(name = "text") String word) {
-        return ItemMapper.collectionToItemDto(service.search(word));
+    public List<ItemDto> search(@RequestParam(name = "text") String word,
+                                @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+        if (from == null || size == null) {
+            return ItemMapper.collectionToItemDto(service.search(word));
+        }
+        return ItemMapper.collectionToItemDto(service.search(word, from, size));
     }
 
     @PostMapping("/{id}/comment")

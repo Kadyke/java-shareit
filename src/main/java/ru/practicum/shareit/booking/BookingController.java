@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOut;
 import ru.practicum.shareit.booking.validation.StateValid;
-import ru.practicum.shareit.exception.StateException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;

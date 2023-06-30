@@ -64,11 +64,5 @@ public class ExceptionController {
     public Map<String, String> handleCommentWithoutBookingException(final CommentWithoutBookingException e) {
         return Map.of("error", e.getMessage());
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleWrongParamsException(final WrongParamsException e) {
-        return Map.of("error", e.getMessage());
-    }
 }
 

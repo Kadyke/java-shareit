@@ -1,16 +1,18 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.WrongParamsException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOut;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
+@Validated
 public class ItemController {
     private final ItemService service;
 
@@ -37,26 +39,20 @@ public class ItemController {
 
     @GetMapping()
     public List<ItemOut> getAllUsersItems(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                          @RequestParam(name = "from", required = false) Integer from,
-                                          @RequestParam(name = "size", required = false) Integer size) {
+                                          @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                          @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         if (from == null || size == null) {
             return service.getAllUsersItems(userId);
-        }
-        if (from < 0 || size < 1) {
-            throw new WrongParamsException("");
         }
         return service.getAllUsersItems(userId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestParam(name = "text") String word,
-                                @RequestParam(name = "from", required = false) Integer from,
-                                @RequestParam(name = "size", required = false) Integer size) {
+                                @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         if (from == null || size == null) {
             return ItemMapper.collectionToItemDto(service.search(word));
-        }
-        if (from < 0 || size < 1) {
-            throw new WrongParamsException("");
         }
         return ItemMapper.collectionToItemDto(service.search(word, from, size));
     }

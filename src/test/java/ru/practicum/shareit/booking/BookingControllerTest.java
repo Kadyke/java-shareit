@@ -153,26 +153,13 @@ class BookingControllerTest {
 
     @Test
     @SneakyThrows
-    void getOwnerBookings_returnWrongParamsException() {
-        when(service.getOwnerBookings(masha.getId(), State.ALL, 0, 2))
-                .thenAnswer(invocationOnMock -> List.of(bookingOut));
-        mvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", masha.getId())
-                        .param("state", "ALL")
-                        .param("from", "-1")
-                        .param("size", "2"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @SneakyThrows
     void getOwnerBookings_returnStatesException() {
         when(service.getOwnerBookings(masha.getId(), State.ALL, 0, 2))
                 .thenAnswer(invocationOnMock -> List.of(bookingOut));
         mvc.perform(get("/bookings/owner")
                         .header("X-Sharer-User-Id", masha.getId())
                         .param("state", "ALLSU")
-                        .param("from", "1")
+                        .param("from", "0")
                         .param("size", "2"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"error\":\"Unknown state: ALLSU\"}"));

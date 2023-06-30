@@ -91,8 +91,9 @@ public class BookingService {
             case REJECTED:
                 return BookingMapper.collectionToBookingOut(bookingRepository.findByBookerIdAndStatus(userId,
                         state.toString()));
+            default:
+                return null;
         }
-        return null;
     }
 
     public List<BookingOut> getUserBookings(Integer userId, State state, Integer from, Integer size) {
@@ -120,8 +121,9 @@ public class BookingService {
                 return BookingMapper.collectionToBookingOut(
                         bookingRepository.findByBookerAndStatus(user, BookingStatus.valueOf(state.toString()),
                                 pageable).toList());
+            default:
+                return null;
         }
-        return null;
     }
 
     public List<BookingOut> getOwnerBookings(Integer userId, State state) {
@@ -153,6 +155,8 @@ public class BookingService {
                     bookings.addAll(BookingMapper.collectionToBookingOut(
                             bookingRepository.findByItemIdAndStatus(item.getId(),
                             state.toString())));
+                    break;
+                default:
                     break;
             }
         }
@@ -195,6 +199,8 @@ public class BookingService {
                     bookings.addAll(BookingMapper.collectionToBookingOut(
                             bookingRepository.findByItemIdAndStatus(item.getId(),
                                     state.toString())));
+                    break;
+                default:
                     break;
             }
         }

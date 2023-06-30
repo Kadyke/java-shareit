@@ -1,16 +1,19 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOut;
+import ru.practicum.shareit.booking.validation.StateValid;
 import ru.practicum.shareit.exception.StateException;
-import ru.practicum.shareit.exception.WrongParamsException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
+@Validated
 public class BookingController {
     private final BookingService service;
 
@@ -38,42 +41,25 @@ public class BookingController {
 
     @GetMapping
     public List<BookingOut> getUserBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                            @RequestParam(name = "state", defaultValue = "ALL") String stateInString,
-                                            @RequestParam(name = "from", required = false)  Integer from,
-                                            @RequestParam(name = "size", required = false) Integer size) {
-        State state;
-        try {
-            state = State.valueOf(stateInString);
-        } catch (IllegalArgumentException e) {
-            throw new StateException(stateInString);
-        }
+                                            @RequestParam(name = "state", defaultValue = "ALL") @StateValid String stateInString,
+                                            @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                            @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+        State state = State.valueOf(stateInString);
         if (from == null || size == null) {
             return service.getUserBookings(userId, state);
-        }
-        if (from < 0 || size < 1) {
-            throw new WrongParamsException("");
         }
         return service.getUserBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingOut> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                            @RequestParam(name = "state", defaultValue = "ALL") String stateInString,
-                                            @RequestParam(name = "from", required = false) Integer from,
-                                            @RequestParam(name = "size", required = false) Integer size) {
-        State state;
-        try {
-            state = State.valueOf(stateInString);
-        } catch (IllegalArgumentException e) {
-            throw new StateException(stateInString);
-        }
+                                            @RequestParam(name = "state", defaultValue = "ALL") @StateValid String stateInString,
+                                            @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                            @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+        State state = State.valueOf(stateInString);
         if (from == null || size == null) {
             return service.getOwnerBookings(userId, state);
         }
-        if (from < 0 || size < 1) {
-            throw new WrongParamsException("");
-        }
         return service.getOwnerBookings(userId, state, from, size);
     }
-
 }

@@ -1,14 +1,16 @@
 package ru.practicum.shareit.request;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.WrongParamsException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/requests")
+@Validated
 public class ItemRequestController {
     private final ItemRequestService service;
 
@@ -30,13 +32,10 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                               @RequestParam(name = "from", required = false) Integer from,
-                                               @RequestParam(name = "size", required = false) Integer size) {
+                                               @RequestParam(name = "from", required = false) @Min(0) Integer from,
+                                               @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         if (from == null || size == null) {
             return service.getAllRequests(userId);
-        }
-        if (from < 0 || size < 1) {
-            throw new WrongParamsException("");
         }
         return service.getAllRequests(userId, from, size);
     }

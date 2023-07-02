@@ -80,7 +80,7 @@ public class ItemService {
     }
 
     public List<ItemOut> getAllUsersItems(Integer userId) {
-        User user = userService.getUser(userId);
+        userService.getUser(userId);
         return collectionToItemOut(itemRepository.findByOwnerId(userId));
     }
 

@@ -1,14 +1,14 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
-
-import java.util.Map;
+import ru.practicum.shareit.user.dto.UserDto;
 
 @Service
 public class UserClient extends BaseClient {
@@ -22,5 +22,13 @@ public class UserClient extends BaseClient {
                         .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                         .build()
         );
+    }
+
+    public ResponseEntity<Object> getById(Integer id) {
+        return get("/", id);
+    }
+
+    public ResponseEntity<Object> create(UserDto userDto) {
+        return post("", userDto);
     }
 }

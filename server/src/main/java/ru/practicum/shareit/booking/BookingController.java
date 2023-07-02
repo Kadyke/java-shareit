@@ -1,18 +1,14 @@
 package ru.practicum.shareit.booking;
 
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOut;
-import ru.practicum.shareit.booking.validation.StateValid;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
-@Validated
 public class BookingController {
     private final BookingService service;
 
@@ -28,9 +24,10 @@ public class BookingController {
     }
 
     @PatchMapping("/{id}")
-    public BookingOut changeStatus(@RequestHeader("X-Sharer-User-Id") Integer userId, @PathVariable Integer id,
-                                   @RequestParam(name = "approved") Boolean status) {
-        return service.changeStatus(id, userId, status);
+    public BookingOut changeStatus(@RequestHeader(value = "X_SHARER_USER_ID") Long userId, @PathVariable("id") Long id,
+                                   @RequestParam(name = "approved") boolean status) {
+
+        return service.changeStatus(Integer.valueOf(String.valueOf(id)), Integer.valueOf(String.valueOf(userId)), status);
     }
 
     @GetMapping("/{id}")
@@ -40,10 +37,9 @@ public class BookingController {
 
     @GetMapping
     public List<BookingOut> getUserBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                            @RequestParam(name = "state", defaultValue = "ALL") @StateValid String stateInString,
-                                            @RequestParam(name = "from", required = false) @Min(0) Integer from,
-                                            @RequestParam(name = "size", required = false) @Min(1) Integer size) {
-        State state = State.valueOf(stateInString);
+                                            @RequestParam(name = "state", defaultValue = "ALL") State state,
+                                            @RequestParam(name = "from", required = false) Integer from,
+                                            @RequestParam(name = "size", required = false) Integer size) {
         if (from == null || size == null) {
             return service.getUserBookings(userId, state);
         }
@@ -52,10 +48,9 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingOut> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                            @RequestParam(name = "state", defaultValue = "ALL") @StateValid String stateInString,
-                                            @RequestParam(name = "from", required = false) @Min(0) Integer from,
-                                            @RequestParam(name = "size", required = false) @Min(1) Integer size) {
-        State state = State.valueOf(stateInString);
+                                            @RequestParam(name = "state", defaultValue = "ALL") State state,
+                                            @RequestParam(name = "from", required = false) Integer from,
+                                            @RequestParam(name = "size", required = false) Integer size) {
         if (from == null || size == null) {
             return service.getOwnerBookings(userId, state);
         }

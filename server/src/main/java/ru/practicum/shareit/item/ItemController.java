@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/items")
-@Validated
 public class ItemController {
     private final ItemService service;
 
@@ -39,8 +38,8 @@ public class ItemController {
 
     @GetMapping()
     public List<ItemOut> getAllUsersItems(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                          @RequestParam(name = "from", required = false) @Min(0) Integer from,
-                                          @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+                                          @RequestParam(name = "from", required = false) Integer from,
+                                          @RequestParam(name = "size", required = false) Integer size) {
         if (from == null || size == null) {
             return service.getAllUsersItems(userId);
         }
@@ -49,8 +48,8 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestParam(name = "text") String word,
-                                @RequestParam(name = "from", required = false) @Min(0) Integer from,
-                                @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+                                @RequestParam(name = "from", required = false) Integer from,
+                                @RequestParam(name = "size", required = false) Integer size) {
         if (from == null || size == null) {
             return ItemMapper.collectionToItemDto(service.search(word));
         }

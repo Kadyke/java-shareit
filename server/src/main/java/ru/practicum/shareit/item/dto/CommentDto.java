@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentDto {
     private Integer id;
-    @NotNull
-    @NotBlank
     private String text;
     private ItemDto item;
     private String authorName;

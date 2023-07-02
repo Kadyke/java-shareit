@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/requests")
-@Validated
 public class ItemRequestController {
     private final ItemRequestService service;
 
@@ -32,8 +31,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                               @RequestParam(name = "from", required = false) @Min(0) Integer from,
-                                               @RequestParam(name = "size", required = false) @Min(1) Integer size) {
+                                               @RequestParam(name = "from", required = false) Integer from,
+                                               @RequestParam(name = "size", required = false) Integer size) {
         if (from == null || size == null) {
             return service.getAllRequests(userId);
         }

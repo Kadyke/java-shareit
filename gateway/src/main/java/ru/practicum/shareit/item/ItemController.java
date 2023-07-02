@@ -51,7 +51,7 @@ public class ItemController {
                                 @RequestParam(name = "from", required = false) @Min(0) Integer from,
                                 @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         if (word == null || word.isBlank()) {
-            return ResponseEntity.accepted().body(new ArrayList<>());
+            return ResponseEntity.ok().body(new ArrayList<>());
         }
         if (from == null || size == null) {
             return client.search(word);

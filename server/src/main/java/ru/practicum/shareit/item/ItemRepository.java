@@ -19,7 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
                                                                                                      String description,
                                                                                                      Pageable pageable);
 
-    @Query(value = "select * from items where user_id = ?;", nativeQuery = true)
+    @Query(value = "select * from items where user_id = ? order by id;", nativeQuery = true)
     List<Item> findByOwnerId(Integer id);
 
     Page<Item> findByOwner(User user, Pageable pageable);

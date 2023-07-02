@@ -29,7 +29,7 @@ public class BookingController {
     public ResponseEntity<Object> changeStatus(@RequestHeader("X-Sharer-User-Id") Integer userId,
                                                @PathVariable Long id,
                                                @RequestParam(name = "approved") Boolean status) {
-        return client.patch(id, userId, status);
+        return client.changeStatus(id, userId, status);
     }
 
     @GetMapping("/{id}")

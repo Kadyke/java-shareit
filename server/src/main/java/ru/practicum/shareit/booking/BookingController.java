@@ -24,10 +24,10 @@ public class BookingController {
     }
 
     @PatchMapping("/{id}")
-    public BookingOut changeStatus(@RequestHeader(value = "X_SHARER_USER_ID") Long userId, @PathVariable("id") Long id,
-                                   @RequestParam(name = "approved") boolean status) {
+    public BookingOut changeStatus(@RequestHeader("X-Sharer-User-Id") Integer userId, @PathVariable("id") Integer id,
+                                   @RequestParam(name = "approved") Boolean status) {
 
-        return service.changeStatus(Integer.valueOf(String.valueOf(id)), Integer.valueOf(String.valueOf(userId)), status);
+        return service.changeStatus(id, userId, status);
     }
 
     @GetMapping("/{id}")

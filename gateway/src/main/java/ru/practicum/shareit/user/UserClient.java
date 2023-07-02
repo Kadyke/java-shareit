@@ -25,10 +25,22 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getById(Integer id) {
-        return get("/", id);
+        return get("/" + id);
     }
 
     public ResponseEntity<Object> create(UserDto userDto) {
         return post("", userDto);
+    }
+
+    public ResponseEntity<Object> update(UserDto userDto) {
+        return patch("/" + userDto.getId(), userDto);
+    }
+
+    public void deleteUser(Integer id) {
+        delete("/" + id);
+    }
+
+    public ResponseEntity<Object> getAll() {
+        return get("");
     }
 }

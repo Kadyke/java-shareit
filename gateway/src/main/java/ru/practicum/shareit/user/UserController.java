@@ -21,25 +21,24 @@ public class UserController {
         return client.create(userDto);
     }
 
-//    @PatchMapping("/{id}")
-//    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Integer id) {
-//        userDto.setId(id);
-//        User user = UserMapper.toUser(userDto);
-//        return UserMapper.toUserDto(client.updateUser(user));
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteUser(@PathVariable Integer id) {
-//        client.deleteUser(id);
-//    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updateUser(@RequestBody UserDto userDto, @PathVariable Integer id) {
+        userDto.setId(id);
+        return client.update(userDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Integer id) {
+        client.deleteUser(id);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUser(@PathVariable Integer id) {
         return client.getById(id);
     }
 
-//    @GetMapping
-//    public List<UserDto> getAllUsers() {
-//        return UserMapper.collectionToUserDto(client.getAllUsers());
-//    }
+    @GetMapping
+    public ResponseEntity<Object> getAllUsers() {
+        return client.getAll();
+    }
 }

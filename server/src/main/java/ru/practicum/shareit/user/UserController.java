@@ -23,7 +23,6 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Integer id) {
-        userDto.setId(id);
         User user = UserMapper.toUser(userDto);
         return UserMapper.toUserDto(service.updateUser(user));
     }

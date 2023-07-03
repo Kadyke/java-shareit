@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOut;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,7 +17,7 @@ public class BookingController {
 
     @PostMapping
     public BookingOut addNewBooking(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                    @Valid @RequestBody BookingDto bookingDto) {
+                                    @RequestBody BookingDto bookingDto) {
         bookingDto.setBookerId(userId);
         return service.addNewBooking(bookingDto);
     }
